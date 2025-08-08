@@ -49,4 +49,13 @@ class User extends Authenticatable
             'role' => Role::class
         ];
     }
+
+    public function courses()
+    {
+        if($this->role == ROLE::TEACHER) {
+            return $this->hasMany('courses', 'teacher_id');
+        } else if($this->role == ROLE::STUDENT) {
+            return $this->belongsToMany(Course::class, 'student_courses', 'student_id', 'course_id');
+        }
+    }
 }
