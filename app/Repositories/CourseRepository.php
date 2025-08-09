@@ -13,8 +13,8 @@ class CourseRepository extends BaseRepository
         $course->sessions()->createMany($sessions);
     }
 
-    public static function hasSessionsWithStudents(Course $course): bool
+    public static function hasStudents(Course $course): bool
     {
-        return $course->sessions()->whereHas('students')->exists();
+        return $course->students()->exists();
     }
 }

@@ -13,7 +13,7 @@ class BaseRepository implements BaseContract
 
     public static function findOne($id): Model
     {
-        return static::$modelClass::find($id);
+        return static::$modelClass::findOrFail($id);
     }
 
     public function getAlll(): Collection

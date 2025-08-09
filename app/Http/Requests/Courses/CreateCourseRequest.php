@@ -5,7 +5,7 @@ namespace App\Http\Requests\Courses;
 use App\Enums\Role;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCourseRequest extends FormRequest
+class CreateCourseRequest extends BaseCourseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

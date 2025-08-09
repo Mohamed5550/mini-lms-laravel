@@ -6,7 +6,7 @@ use App\Enums\Role;
 use App\Repositories\CourseRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteCourseRequest extends FormRequest
+class DeleteCourseRequest extends BaseCourseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,16 +32,15 @@ class DeleteCourseRequest extends FormRequest
     {
         $id = $this->route('course');
         $course = CourseRepository::findOne($id);
-        // check if the course has linked sessions with students
+        $this->assertCourseNotBooked($validator, $course);
+        $this->assertCourseBelongsToAuthenticatedTeacher($validator, $course);
+    }
+
+    private function assertCourseNotBooked($validator, $course)
+    {
         $validator->after(function ($validator) use ($course){
-            if (CourseRepository::hasSessionsWithStudents($course)) {
-                $validator->errors()->add('course', 'This courase cannot be deleted');
-            }
-        });
-        // check if the course belongs to the authenticated teacher
-        $validator->after(function ($validator) use ($course) {
-            if ($course->teacher_id !== auth("sanctum")->id()) {
-                $validator->errors()->add('title', 'You are not authorized to delete this course.');
+            if (CourseRepository::hasStudents($course)) {
+                $validator->errors()->add('course', 'This course cannot be deleted');
             }
         });
     }

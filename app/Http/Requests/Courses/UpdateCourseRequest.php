@@ -6,7 +6,7 @@ use App\Enums\Role;
 use App\Repositories\CourseRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCourseRequest extends FormRequest
+class UpdateCourseRequest extends BaseCourseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,12 +31,8 @@ class UpdateCourseRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
-            $id = $this->route('course');
-            $course = CourseRepository::findOne($id);
-            if ($course->teacher_id !== auth("sanctum")->id()) {
-                $validator->errors()->add('title', 'You are not authorized to update this course.');
-            }
-        });
+        $id = $this->route('course');
+        $course = CourseRepository::findOne($id);
+        $this->assertCourseBelongsToAuthenticatedTeacher($validator, $course);
     }
 }

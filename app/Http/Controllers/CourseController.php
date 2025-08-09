@@ -7,6 +7,7 @@ use App\Services\CourseService;
 use App\Http\Requests\Courses\CourseRequest;
 use App\Http\Resources\Courses\CourseResource;
 use App\Http\Requests\Courses\CreateCourseRequest;
+use App\Http\Requests\Courses\DeleteCourseRequest;
 use App\Http\Requests\Courses\UpdateCourseRequest;
 use App\Http\Resources\Courses\CourseListResource;
 
@@ -58,7 +59,7 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteCourseRequest $request, string $id)
     {
         $this->service->delete($id);
         return response()->json([
