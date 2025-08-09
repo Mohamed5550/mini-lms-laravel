@@ -16,14 +16,16 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - database
-      - redis
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
   # Database Server
   database:
     image: mysql:8.3
     ports:
-      - 3306:3306
+      - 3307:3306
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USERNAME}
@@ -31,6 +33,11 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   # Redis Server
   redis:
@@ -51,7 +58,7 @@ services:
       - CONTAINER_ROLE=queue
     working_dir: /var/www
     volumes:
-      - ./://var/www
+      - .:/var/www
   
   # Websocket Server
   websocket:
@@ -65,7 +72,7 @@ services:
       - CONTAINER_ROLE=websocket
     working_dir: /var/www
     volumes:
-      - ./://var/www
+      - .:/var/www
     ports:
       - 6001:6001
     depends_on:
