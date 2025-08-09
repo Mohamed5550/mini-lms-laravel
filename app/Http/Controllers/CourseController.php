@@ -30,7 +30,7 @@ class CourseController extends Controller
         return response()->json([
             "message" => __("Course created successfully"),
             "data" => new CourseResource($course)
-        ]);
+        ], 201);
     }
 
     /**

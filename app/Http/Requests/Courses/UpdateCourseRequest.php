@@ -13,7 +13,7 @@ class UpdateCourseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth("sanctum")->check() && auth("sanctum")->user()->role == Role::TEACHER;
+        return auth("sanctum")->user()->role == Role::TEACHER;
     }
 
     /**

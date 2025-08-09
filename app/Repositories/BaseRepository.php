@@ -18,12 +18,12 @@ class BaseRepository implements BaseContract
 
     public function getAlll(): Collection
     {
-        return $this->modelClass::get();
+        return static::$modelClass::get();
     }
 
     public function paginate(): LengthAwarePaginator
     {
-        return $this->modelClass::paginate();
+        return static::$modelClass::paginate();
     }
 
     public function delete($id)
@@ -34,7 +34,7 @@ class BaseRepository implements BaseContract
 
     public function create($data): Model
     {
-        return $this->modelClass::create($data);
+        return static::$modelClass::create($data);
     }
 
     public function update($id, $data): Model
