@@ -13,10 +13,19 @@ fi
 
 role=${CONTAINER_ROLE:-app}
 if [ "$role" = "app" ]; then
-    php artisan migrate
     php artisan key:generate
-    php artisan optimize:clear
     php artisan storage:link
+    
+    # Check if migrations table exists and has entries
+    if ! php artisan tinker --execute="echo \DB::table('migrations')->count();" 2>/dev/null | grep -q '^[1-9]'; then
+        echo "Running fresh migrations with seed..."
+        php artisan migrate --seed
+    else
+        echo "Running migrations (no seed)..."
+        php artisan migrate
+    fi
+
+    php artisan optimize:clear
 
     php artisan serve --port=$PORT --host=0.0.0.0
     exec docker-php-entrypoint "$@"
